@@ -58,7 +58,7 @@ interface Topic {
     terms: Terms;
     getRecentTopics(cid: string, uid: string, start: number, stop: number, filter: string): Promise<unknown>;
     getLatestTopics(options: Options): Promise<latestTopics>;
-    getLatestTidsFromSet(set: string, start: number, stop: string, term: string): Promise<unknown>;
+    getLatestTidsFromSet(set: string, start: number, stop: string | number, term: string): Promise<unknown>;
     updateLastPostTimeFromLastPid(tid: string): Promise<void>;
     updateLastPostTime(tid: string, lastposttime: Date): Promise<void>;
     updateRecent(tid: string, timestamp: Date): Promise<void>;
@@ -100,13 +100,19 @@ export default function (Topics: Topic) {
         return { topics: topics, nextStart: parseInt(options.stop, 10) + 1 };
     };
 
-    Topics.getLatestTidsFromSet = async function (set: string, start: number, stop: string, term: string) {
+    Topics.getLatestTidsFromSet = async function (set: string, start: number, stop: number | string, term: string) {
         let since: number = terms.day;
         if (terms[term]) {
             since = terms[term] as number;
         }
 
-        const count: string | number = parseInt(stop, 10) === -1 ? stop : parseInt(stop, 10) - start + 1;
+        let count:string | number ;
+        if (typeof stop === 'string') {
+            const stopInt: number = parseInt(stop,10);
+            count = stopInt === -1 ? stop : stopInt - start + 1;
+        } else {
+            count = stop - start +1;
+        }
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         return await db.getSortedSetRevRangeByScore(set, start, count, '+inf', Date.now() - since) as string[];
     };

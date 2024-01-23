@@ -51,7 +51,14 @@ function default_1(Topics) {
             if (terms[term]) {
                 since = terms[term];
             }
-            const count = parseInt(stop, 10) === -1 ? stop : parseInt(stop, 10) - start + 1;
+            let count;
+            if (typeof stop === 'string') {
+                const stopInt = parseInt(stop, 10);
+                count = stopInt === -1 ? stop : stopInt - start + 1;
+            }
+            else {
+                count = stop - start + 1;
+            }
             // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return yield database_1.default.getSortedSetRevRangeByScore(set, start, count, '+inf', Date.now() - since);
         });
