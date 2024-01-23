@@ -1,9 +1,16 @@
 
 'use strict';
 
-const db = require('../database');
-const plugins = require('../plugins');
-const posts = require('../posts');
+import db from '../database';
+import plugins from '../plugins';
+import posts from '../posts';
+
+interface options {
+    uid: string;
+    start: number;
+    stop: number;
+    term: string;
+}
 
 module.exports = function (Topics) {
     const terms = {
@@ -13,7 +20,7 @@ module.exports = function (Topics) {
         year: 31104000000,
     };
 
-    Topics.getRecentTopics = async function (cid, uid, start, stop, filter) {
+    Topics.getRecentTopics = async function (cid: string, uid: string, start: number, stop: number, filter: string) {
         return await Topics.getSortedTopics({
             cids: cid,
             uid: uid,
@@ -25,7 +32,7 @@ module.exports = function (Topics) {
     };
 
     /* not an orphan method, used in widget-essentials */
-    Topics.getLatestTopics = async function (options) {
+    Topics.getLatestTopics = async function (options: options) {
         // uid, start, stop, term
         const tids = await Topics.getLatestTidsFromSet('topics:recent', options.start, options.stop, options.term);
         const topics = await Topics.getTopics(tids, options);
