@@ -52,6 +52,7 @@ function default_1(Topics) {
                 since = terms[term];
             }
             const count = parseInt(stop, 10) === -1 ? stop : parseInt(stop, 10) - start + 1;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return yield database_1.default.getSortedSetRevRangeByScore(set, start, count, '+inf', Date.now() - since);
         });
     };
@@ -89,13 +90,13 @@ function default_1(Topics) {
         return __awaiter(this, void 0, void 0, function* () {
             let data = { tid: tid, timestamp: timestamp };
             if (plugins_1.default.hooks.hasListeners('filter:topics.updateRecent')) {
-                data = yield plugins_1.default.hooks.fire('filter:topics.updateRecent', { tid: tid, timestamp: timestamp });
+                data = (yield plugins_1.default.hooks.fire('filter:topics.updateRecent', { tid: tid, timestamp: timestamp }));
             }
             if (data && data.tid && data.timestamp) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 yield database_1.default.sortedSetAdd('topics:recent', data.timestamp, data.tid);
             }
         });
     };
 }
 exports.default = default_1;
-;

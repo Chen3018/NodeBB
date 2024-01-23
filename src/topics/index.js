@@ -20,7 +20,7 @@ require('./create')(Topics);
 require('./delete')(Topics);
 require('./sorted')(Topics);
 require('./unread')(Topics);
-require('./recent')(Topics);
+require('./recent').default(Topics);
 require('./user')(Topics);
 require('./fork')(Topics);
 require('./posts')(Topics);
