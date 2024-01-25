@@ -1,11 +1,13 @@
-import url from 'url';
+import url = require('url');
 
-import plugins from '../plugins';
-import meta from '../meta';
-import user from '../user';
+import plugins = require('../plugins');
+import meta = require('../meta');
+import user = require('../user');
 
 function adminHomePageRoute() {
-    return ((meta.config.homePageRoute === 'custom' ? meta.config.homePageCustom : meta.config.homePageRoute) || 'categories').replace(/^\//, '');
+    // The next line calls a function in a module that has not been updated to TS yet
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    return ((meta.config.homePageRoute === 'custom' ? meta.config.homePageCustom : meta.config.homePageRoute) || 'categories').replace(/^\//, '') as string;
 }
 
 async function getUserHomeRoute(uid) {
