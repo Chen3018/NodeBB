@@ -60,6 +60,8 @@ function rewrite(req, res, next) {
         next();
     });
 }
+// The next line calls a function in a module that has not been updated to TS yet
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 exports.rewrite = rewrite;
 function pluginHook(req, res, next) {
     const hook = `action:homepage.get:${res.locals.homePageRoute}`;
@@ -67,6 +69,8 @@ function pluginHook(req, res, next) {
         req: req,
         res: res,
         next: next,
-    });
+    }).catch(e => console.error(e));
 }
+// The next line calls a function in a module that has not been updated to TS yet
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 exports.pluginHook = pluginHook;

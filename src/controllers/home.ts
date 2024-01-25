@@ -80,16 +80,20 @@ async function rewrite(req : Req, res : Res, next : Next) {
     next();
 }
 
+// The next line calls a function in a module that has not been updated to TS yet
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 exports.rewrite = rewrite;
 
-function pluginHook(req, res, next) {
+function pluginHook(req : Req, res : Res, next : Next) {
     const hook = `action:homepage.get:${res.locals.homePageRoute}`;
 
     plugins.hooks.fire(hook, {
         req: req,
         res: res,
         next: next,
-    });
+    }).catch(e => console.error(e));
 }
 
+// The next line calls a function in a module that has not been updated to TS yet
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
 exports.pluginHook = pluginHook;
