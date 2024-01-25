@@ -8,6 +8,29 @@ interface Setting {
     homePageRoute : string;
 }
 
+interface Req {
+    path : string;
+    uid : string;
+    url : string;
+    query : string;
+    pathname : string;
+}
+
+type Next = (a : string | void) => unknown;
+
+interface ParsedUrl {
+    pathname : string;
+    query : unknown;
+}
+
+interface Locals {
+    homePageRoute : string;
+}
+
+interface Res {
+    locals : Locals;
+}
+
 function adminHomePageRoute() {
     // The next line calls a function in a module that has not been updated to TS yet
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
@@ -27,20 +50,22 @@ async function getUserHomeRoute(uid : string) {
     return route;
 }
 
-async function rewrite(req, res, next) {
+async function rewrite(req : Req, res : Res, next : Next) {
     if (req.path !== '/' && req.path !== '/api/' && req.path !== '/api') {
         return next();
     }
     let route = adminHomePageRoute();
+    // The next line calls a function in a module that has not been updated to TS yet
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     if (meta.config.allowUserHomePage) {
         route = await getUserHomeRoute(req.uid);
     }
 
-    let parsedUrl;
+    let parsedUrl : ParsedUrl;
     try {
         parsedUrl = url.parse(route, true);
     } catch (err) {
-        return next(err);
+        return next(err as string);
     }
 
     const { pathname } = parsedUrl;
