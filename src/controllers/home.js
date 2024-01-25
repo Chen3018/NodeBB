@@ -20,6 +20,8 @@ function adminHomePageRoute() {
 }
 function getUserHomeRoute(uid) {
     return __awaiter(this, void 0, void 0, function* () {
+        // The next line calls a function in a module that has not been updated to TS yet
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
         const settings = yield user.getSettings(uid);
         let route = adminHomePageRoute();
         if (settings.homePageRoute !== 'undefined' && settings.homePageRoute !== 'none') {
